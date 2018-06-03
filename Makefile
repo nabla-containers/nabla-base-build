@@ -59,7 +59,7 @@ test-node: solo5 rumprun-packages/nodejs/node.seccomp
 	# this test_hello/ukvm-bin does not use any device modules
 	solo5/tests/test_hello/ukvm-bin build/node.nablet
 
-.PHONY: clean distclean clean_solo5 clean_rump clean_node clean_node
+.PHONY: clean distclean clean_solo5 clean_rump clean_node clean_node clean_nabla_run
 clean:
 	rm -rf build/
 
@@ -74,3 +74,6 @@ clean_rump:
 
 clean_node:
 	make clean -C rumprun-packages/nodejs
+
+clean_node:
+	make clean -C nabla-run
