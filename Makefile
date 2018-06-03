@@ -55,9 +55,8 @@ build/nabla_run: $(NABLA_RUN)
 
 # should print "Hello, Rump!!" (among a lot of other stuff)
 .PHONY: test-node
-test-node: solo5 rumprun-packages/nodejs/node.seccomp
-	# this test_hello/ukvm-bin does not use any device modules
-	solo5/tests/test_hello/ukvm-bin build/node.nablet
+test-node: build
+	sudo build/nabla_run -tap tap007 -ukvm build/ukvm-bin -unikernel build/node.nablet
 
 .PHONY: clean distclean clean_solo5 clean_rump clean_node clean_node clean_nabla_run
 clean:
