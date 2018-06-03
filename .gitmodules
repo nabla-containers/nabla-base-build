@@ -10,3 +10,6 @@
 	path = solo5
 	url = https://github.com/ricarkol/solo5
 	branch = ukvm-linux-seccomp
+[submodule "nabla-build"]
+	path = nabla-build
+	url = git@github.ibm.com:nabla-containers/nabla-build.git

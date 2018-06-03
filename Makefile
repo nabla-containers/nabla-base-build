@@ -4,13 +4,7 @@ default: build
 submodules:
 	git submodule update --init
 
-build: build/node.nablet build/ukvm-bin
-
-build/node.nablet: rumprun-packages/nodejs/node.seccomp
-	install -m 775 -D rumprun-packages/nodejs/node.seccomp $@
-
-build/ukvm-bin: solo5/ukvm/ukvm-bin
-	install -m 775 -D solo5/ukvm/ukvm-bin $@
+build: build/node.nablet build/ukvm-bin build/nabla_run
 
 test: test-node
 
@@ -44,6 +38,20 @@ SHELL := /bin/bash
 
 rumprun-packages/nodejs/node.seccomp: $(RUMP_SOLO5_SECCOMP) $(RUMP_LIBC) rumprun-packages/config.mk
 	source rumprun/obj/config-PATH.sh && make -C rumprun-packages/nodejs node.seccomp
+
+NABLA_RUN=nabla-build/nabla-run/cli/nabla_run/nabla_run
+
+$(NABLA_RUN):
+	make -C nabla-build build
+
+build/node.nablet: rumprun-packages/nodejs/node.seccomp
+	install -m 775 -D rumprun-packages/nodejs/node.seccomp $@
+
+build/ukvm-bin: solo5/ukvm/ukvm-bin
+	install -m 775 -D solo5/ukvm/ukvm-bin $@
+
+build/nabla_run: $(NABLA_RUN)
+	install -m 775 -D $(NABLA_RUN) $@
 
 # should print "Hello, Rump!!" (among a lot of other stuff)
 .PHONY: test-node
