@@ -4,7 +4,7 @@ default: build
 submodules:
 	git submodule update --init
 
-build: build/node.nablet build/ukvm-bin build/nabla_run
+build: build/node.nablet build/ukvm-bin build/nabla_run build/redis-server.nablet
 
 test: test-node
 
@@ -39,13 +39,19 @@ SHELL := /bin/bash
 rumprun-packages/nodejs/node.seccomp: $(RUMP_SOLO5_SECCOMP) $(RUMP_LIBC) rumprun-packages/config.mk
 	source rumprun/obj/config-PATH.sh && make -C rumprun-packages/nodejs node.seccomp
 
+rumprun-packages/redis/bin/redis-server.seccomp: $(RUMP_SOLO5_SECCOMP) $(RUMP_LIBC) rumprun-packages/config.mk
+	source rumprun/obj/config-PATH.sh && make -C rumprun-packages/redis bin/redis-server.seccomp
+
 NABLA_RUN=nabla-build/nabla-run/cli/nabla_run/nabla_run
 
 $(NABLA_RUN):
 	make -C nabla-build build
 
 build/node.nablet: rumprun-packages/nodejs/node.seccomp
-	install -m 775 -D rumprun-packages/nodejs/node.seccomp $@
+	install -m 775 -D $< $@
+
+build/redis-server.nablet: rumprun-packages/redis/bin/redis-server.seccomp
+	install -m 775 -D $< $@
 
 build/ukvm-bin: solo5/ukvm/ukvm-bin
 	install -m 775 -D solo5/ukvm/ukvm-bin $@
