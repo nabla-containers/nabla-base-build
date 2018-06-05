@@ -4,7 +4,7 @@ default: build
 submodules:
 	git submodule update --init
 
-build: build/node.nablet build/ukvm-bin build/nabla_run build/redis-server.nablet
+build: build/node.nablet build/ukvm-bin build/nabla_run build/redis-server.nablet build/python3.nablet
 
 test: test-node
 
@@ -42,6 +42,9 @@ rumprun-packages/nodejs/node.seccomp: $(RUMP_SOLO5_SECCOMP) $(RUMP_LIBC) rumprun
 rumprun-packages/redis/bin/redis-server.seccomp: $(RUMP_SOLO5_SECCOMP) $(RUMP_LIBC) rumprun-packages/config.mk
 	source rumprun/obj/config-PATH.sh && make -C rumprun-packages/redis bin/redis-server.seccomp
 
+rumprun-packages/python3/python.seccomp: $(RUMP_SOLO5_SECCOMP) $(RUMP_LIBC) rumprun-packages/config.mk
+	source rumprun/obj/config-PATH.sh && make -C rumprun-packages/python3 python.seccomp
+
 NABLA_RUN=nabla-build/nabla-run/cli/nabla_run/nabla_run
 
 $(NABLA_RUN):
@@ -53,6 +56,9 @@ build/node.nablet: rumprun-packages/nodejs/node.seccomp
 build/redis-server.nablet: rumprun-packages/redis/bin/redis-server.seccomp
 	install -m 775 -D $< $@
 
+build/python3.nablet: rumprun-packages/python3/python.seccomp
+	install -m 775 -D $< $@
+
 build/ukvm-bin: solo5/ukvm/ukvm-bin
 	install -m 775 -D solo5/ukvm/ukvm-bin $@
 
@@ -62,7 +68,7 @@ build/nabla_run: $(NABLA_RUN)
 # should print "Hello, Rump!!" (among a lot of other stuff)
 .PHONY: test-node
 test-node: build
-	sudo build/nabla_run -tap tap007 -ukvm build/ukvm-bin -unikernel build/node.nablet
+	sudo build/nabla_run -tap tap007 -ukvm build/ukvm-bin -unikernel build/node.nablet build/python3.nablet
 
 .PHONY: clean distclean clean_solo5 clean_rump clean_node clean_node clean_nabla_run
 clean:
