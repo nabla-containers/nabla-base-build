@@ -1,8 +1,6 @@
 FROM scratch
 
 ADD redis-server.nablet /redis-server.nablet
-ADD ukvm-bin /ukvm-bin
-ADD nabla_run /nabla_run
 
 ADD redisaof.conf /data/conf/redisaof.conf
 ADD redis.conf /data/conf/redis.conf
