@@ -6,5 +6,5 @@ ADD python3.nablet /python3.nablet
 ADD ukvm-bin /ukvm-bin
 ADD nabla_run /nabla_run
 
-ENTRYPOINT ["/nabla_run", "--docker", "--ukvm", "/ukvm-bin", "--volume", "/usr/local:/python", \
-		"--env", "PYTHONHOME=/python", "--unikernel", "/python3.nablet"]
+ENTRYPOINT ["/nabla_run", "--docker", "--ukvm", "/ukvm-bin", "--volume", \
+	"/usr/local:/python", "--unikernel", "/python3.nablet"]

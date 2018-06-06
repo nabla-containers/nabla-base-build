@@ -42,7 +42,7 @@ build_docker.alpine: Dockerfile.alpine nabla_run python3.nablet ukvm-bin
 	sudo docker tag nabla-python3-base:alpine kollerr/nabla-python3-base:alpine
 
 run_docker.alpine:
-	sudo docker run --rm -it --cap-add=NET_ADMIN nabla-python3-base:alpine -- -c "print(\"ca\")"
+	sudo docker run --rm -it --cap-add=NET_ADMIN nabla-python3-base:alpine --env PYTHONHOME=/python -- -c "print(\"ca\")"
 
 clean:
 	rm -f nabla_run python3.nablet ukvm-bin
