@@ -27,13 +27,13 @@ build: build_docker build_docker.alpine
 	make -C ../ build/nabla_run
 
 node.nablet: ../build/node.nablet
-	install ../build/node.nablet .
+	install $< .
 
 ukvm-bin: ../build/ukvm-bin
-	install ../build/ukvm-bin .
+	install $< .
 
 nabla_run: ../build/nabla_run
-	install ../build/nabla_run .
+	install $< .
 
 FORCE:
 
@@ -44,6 +44,12 @@ build_docker: Dockerfile nabla_run node.nablet ukvm-bin
 build_docker.alpine: Dockerfile.alpine nabla_run node.nablet ukvm-bin
 	sudo docker build -f Dockerfile.alpine -t nabla-node-base:alpine .
 	sudo docker tag nabla-node-base:alpine kollerr/nabla-node-base:alpine
+
+run_docker:
+	# There is no /tmp in a scratch image, so we need to fake one.
+	mkdir -p tmp
+	sudo docker run --rm -it -v $(CURDIR):/tmp \
+		--cap-add=NET_ADMIN nabla-node-base
 
 # Don't pass a mountpoint, it runs a node app that just prints 'Hello, Rump!!'
 # It doesn't create an ISO either.
