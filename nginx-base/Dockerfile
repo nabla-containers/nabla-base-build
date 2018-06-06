@@ -1,0 +1,9 @@
+FROM scratch
+
+ADD nginx.nablet /nginx.nablet
+ADD ukvm-bin /ukvm-bin
+ADD nabla_run /nabla_run
+
+COPY data /data
+
+ENTRYPOINT ["/nabla_run", "--docker", "--ukvm", "/ukvm-bin", "--unikernel", "/nginx.nablet"]

@@ -15,7 +15,7 @@
 # TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 # PERFORMANCE OF THIS SOFTWARE.
 
-build: build_docker.alpine
+build: build_docker build_docker.alpine
 
 ../build/nginx.nablet: FORCE
 	make -C ../ build/nginx.nablet
@@ -37,12 +37,22 @@ nabla_run: ../build/nabla_run
 
 FORCE:
 
+build_docker: Dockerfile nabla_run nginx.nablet ukvm-bin
+	sudo docker build -f Dockerfile -t nabla-nginx-base .
+	sudo docker tag nabla-nginx-base kollerr/nabla-nginx-base
+
 build_docker.alpine: Dockerfile.alpine nabla_run nginx.nablet ukvm-bin
 	sudo docker build -f Dockerfile.alpine -t nabla-nginx-base:alpine .
 	sudo docker tag nabla-nginx-base:alpine kollerr/nabla-nginx-base:alpine
 
-# Don't pass a mountpoint, it runs a nginx app that just prints 'Hello, Rump!!'
-# It doesn't create an ISO either.
+run_docker:
+	# There is no /tmp in a scratch image, so we need to fake one.
+	mkdir -p tmp
+	sudo docker run --expose 80 --rm -it --cap-add=NET_ADMIN \
+		-v $(CURDIR):/tmp \
+		kollerr/nabla-nginx-base \
+		--volume /data:/data -- -c /data/conf/nginx.conf
+
 run_docker.alpine:
 	sudo docker run --expose 80 --rm -it --cap-add=NET_ADMIN \
 		kollerr/nabla-nginx-base:alpine \

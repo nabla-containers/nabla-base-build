@@ -15,7 +15,7 @@
 # TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 # PERFORMANCE OF THIS SOFTWARE.
 
-build: build_docker.alpine
+build: build_docker build_docker.alpine
 
 ../build/node.nablet: FORCE
 	make -C ../ build/node.nablet
@@ -36,6 +36,10 @@ nabla_run: ../build/nabla_run
 	install ../build/nabla_run .
 
 FORCE:
+
+build_docker: Dockerfile nabla_run node.nablet ukvm-bin
+	sudo docker build -f Dockerfile -t nabla-node-base .
+	sudo docker tag nabla-node-base kollerr/nabla-node-base
 
 build_docker.alpine: Dockerfile.alpine nabla_run node.nablet ukvm-bin
 	sudo docker build -f Dockerfile.alpine -t nabla-node-base:alpine .
