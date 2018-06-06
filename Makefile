@@ -4,7 +4,7 @@ default: build
 submodules:
 	git submodule update --init
 
-build: build/node.nablet build/ukvm-bin build/nabla_run build/redis-server.nablet build/python3.nablet
+build: build/node.nablet build/ukvm-bin build/nabla_run build/redis-server.nablet build/python3.nablet build/nginx.nablet
 
 test: test-node
 
@@ -45,6 +45,10 @@ rumprun-packages/redis/bin/redis-server.seccomp: $(RUMP_SOLO5_SECCOMP) $(RUMP_LI
 rumprun-packages/python3/python.seccomp: $(RUMP_SOLO5_SECCOMP) $(RUMP_LIBC) rumprun-packages/config.mk
 	source rumprun/obj/config-PATH.sh && make -C rumprun-packages/python3 python.seccomp
 
+rumprun-packages/nginx/bin/nginx.seccomp: $(RUMP_SOLO5_SECCOMP) $(RUMP_LIBC) rumprun-packages/config.mk
+	source rumprun/obj/config-PATH.sh && make -C rumprun-packages/nginx all
+	source rumprun/obj/config-PATH.sh && make -C rumprun-packages/nginx bin/nginx.seccomp
+
 NABLA_RUN=nabla-build/nabla-run/cli/nabla_run/nabla_run
 
 $(NABLA_RUN):
@@ -57,6 +61,9 @@ build/redis-server.nablet: rumprun-packages/redis/bin/redis-server.seccomp
 	install -m 775 -D $< $@
 
 build/python3.nablet: rumprun-packages/python3/python.seccomp
+	install -m 775 -D $< $@
+
+build/nginx.nablet: rumprun-packages/nginx/bin/nginx.seccomp
 	install -m 775 -D $< $@
 
 build/ukvm-bin: solo5/ukvm/ukvm-bin
