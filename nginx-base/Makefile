@@ -27,13 +27,13 @@ build: build_docker build_docker.alpine
 	make -C ../ build/nabla_run
 
 nginx.nablet: ../build/nginx.nablet
-	install ../build/nginx.nablet .
+	install $< .
 
 ukvm-bin: ../build/ukvm-bin
-	install ../build/ukvm-bin .
+	install $< .
 
 nabla_run: ../build/nabla_run
-	install ../build/nabla_run .
+	install $< .
 
 FORCE:
 
