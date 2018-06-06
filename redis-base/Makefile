@@ -27,22 +27,32 @@ build: build_docker.alpine
 	make -C ../ build/nabla_run
 
 redis-server.nablet: ../build/redis-server.nablet
-	install ../build/redis-server.nablet .
+	install $< .
 
 ukvm-bin: ../build/ukvm-bin
-	install ../build/ukvm-bin .
+	install $< .
 
 nabla_run: ../build/nabla_run
-	install ../build/nabla_run .
+	install $< .
 
 FORCE:
+
+build_docker: Dockerfile nabla_run redis-server.nablet ukvm-bin
+	sudo docker build -f Dockerfile -t nabla-redis-base .
+	sudo docker tag nabla-redis-base kollerr/nabla-redis-base
 
 build_docker.alpine: Dockerfile.alpine nabla_run redis-server.nablet ukvm-bin
 	sudo docker build -f Dockerfile.alpine -t nabla-redis-base:alpine .
 	sudo docker tag nabla-redis-base:alpine kollerr/nabla-redis-base:alpine
 
-# Don't pass a mountpoint, it runs a redis app that just prints 'Hello, Rump!!'
-# It doesn't create an ISO either.
+run_docker:
+	# There is no /tmp in a scratch image, so we need to fake one.
+	mkdir -p tmp
+	sudo docker run --expose 6379 --rm -it --cap-add=NET_ADMIN \
+		-v $(CURDIR):/tmp \
+		kollerr/nabla-redis-base \
+		--volume /data:/data /data/conf/redis.conf
+
 run_docker.alpine:
 	sudo docker run --expose 6379 --rm -it --cap-add=NET_ADMIN \
 		kollerr/nabla-redis-base:alpine \
