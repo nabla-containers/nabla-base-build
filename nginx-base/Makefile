@@ -45,15 +45,15 @@ build_docker.alpine: Dockerfile.alpine nabla_run nginx.nablet ukvm-bin
 	sudo docker build -f Dockerfile.alpine -t nabla-nginx-base:alpine .
 	sudo docker tag nabla-nginx-base:alpine kollerr/nabla-nginx-base:alpine
 
-run_docker:
+test_docker:
 	# There is no /tmp in a scratch image, so we need to fake one.
 	mkdir -p tmp
 	sudo docker run --expose 80 --rm -it --cap-add=NET_ADMIN \
-		-v $(CURDIR):/tmp \
+		-v $(CURDIR)/tmp:/tmp \
 		kollerr/nabla-nginx-base \
 		--volume /data:/data -- -c /data/conf/nginx.conf
 
-run_docker.alpine:
+test_docker.alpine:
 	sudo docker run --expose 80 --rm -it --cap-add=NET_ADMIN \
 		kollerr/nabla-nginx-base:alpine \
 		--volume /data:/data -- -c /data/conf/nginx.conf

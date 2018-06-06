@@ -45,15 +45,15 @@ build_docker.alpine: Dockerfile.alpine nabla_run redis-server.nablet ukvm-bin
 	sudo docker build -f Dockerfile.alpine -t nabla-redis-base:alpine .
 	sudo docker tag nabla-redis-base:alpine kollerr/nabla-redis-base:alpine
 
-run_docker:
+test_docker:
 	# There is no /tmp in a scratch image, so we need to fake one.
 	mkdir -p tmp
 	sudo docker run --expose 6379 --rm -it --cap-add=NET_ADMIN \
-		-v $(CURDIR):/tmp \
+		-v $(CURDIR)/tmp:/tmp \
 		kollerr/nabla-redis-base \
 		--volume /data:/data /data/conf/redis.conf
 
-run_docker.alpine:
+test_docker.alpine:
 	sudo docker run --expose 6379 --rm -it --cap-add=NET_ADMIN \
 		kollerr/nabla-redis-base:alpine \
 		--volume /data:/data /data/conf/redis.conf
