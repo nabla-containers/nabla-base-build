@@ -39,11 +39,11 @@ FORCE:
 
 build_docker: Dockerfile nabla_run nginx.nablet ukvm-bin
 	sudo docker build -f Dockerfile -t nabla-nginx-base .
-	sudo docker tag nabla-nginx-base kollerr/nabla-nginx-base
+	sudo docker tag nabla-nginx-base nablact/nabla-nginx-base
 
 build_docker.alpine: Dockerfile.alpine nabla_run nginx.nablet ukvm-bin
 	sudo docker build -f Dockerfile.alpine -t nabla-nginx-base:alpine .
-	sudo docker tag nabla-nginx-base:alpine kollerr/nabla-nginx-base:alpine
+	sudo docker tag nabla-nginx-base:alpine nablact/nabla-nginx-base:alpine
 
 test_docker: nabla_run ukvm-bin
 	# There is no /tmp in a scratch image, so we need to fake one.
@@ -52,12 +52,12 @@ test_docker: nabla_run ukvm-bin
 		-v $(CURDIR)/tmp:/tmp \
 		-v $(CURDIR)/nabla_run:/nabla_run \
 		-v $(CURDIR)/ukvm-bin:/ukvm-bin \
-		kollerr/nabla-nginx-base \
+		nablact/nabla-nginx-base \
 		--volume /data:/data -- -c /data/conf/nginx.conf
 
 test_docker.alpine:
 	sudo docker run --expose 80 --rm -it --cap-add=NET_ADMIN \
-		kollerr/nabla-nginx-base:alpine \
+		nablact/nabla-nginx-base:alpine \
 		--volume /data:/data -- -c /data/conf/nginx.conf
 
 clean:

@@ -39,11 +39,11 @@ FORCE:
 
 build_docker: Dockerfile nabla_run redis-server.nablet ukvm-bin
 	sudo docker build -f Dockerfile -t nabla-redis-base .
-	sudo docker tag nabla-redis-base kollerr/nabla-redis-base
+	sudo docker tag nabla-redis-base nablact/nabla-redis-base
 
 build_docker.alpine: Dockerfile.alpine nabla_run redis-server.nablet ukvm-bin
 	sudo docker build -f Dockerfile.alpine -t nabla-redis-base:alpine .
-	sudo docker tag nabla-redis-base:alpine kollerr/nabla-redis-base:alpine
+	sudo docker tag nabla-redis-base:alpine nablact/nabla-redis-base:alpine
 
 test_docker: nabla_run ukvm-bin
 	# There is no /tmp in a scratch image, so we need to fake one.
@@ -52,12 +52,12 @@ test_docker: nabla_run ukvm-bin
 		-v $(CURDIR)/tmp:/tmp \
 		-v $(CURDIR)/nabla_run:/nabla_run \
 		-v $(CURDIR)/ukvm-bin:/ukvm-bin \
-		kollerr/nabla-redis-base \
+		nablact/nabla-redis-base \
 		--volume /data:/data /data/conf/redis.conf
 
 test_docker.alpine:
 	sudo docker run --expose 6379 --rm -it --cap-add=NET_ADMIN \
-		kollerr/nabla-redis-base:alpine \
+		nablact/nabla-redis-base:alpine \
 		--volume /data:/data /data/conf/redis.conf
 
 clean:
