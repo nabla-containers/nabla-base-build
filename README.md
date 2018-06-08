@@ -1,18 +1,36 @@
 
+This repository builds base Docker images for Rumprun-based nabla
+containers.  So far we provide the following:
 
-You will need some packages:
+    nginx-base
+    node-base
+    python3-base
+    redis-base
 
+### Building the bases
+
+First fetch the submodules (solo5, rumprun, and rumprun-packages):
+```
+make submodules
+```
+
+Ensure you have the following prerequisites on your system for
+building the bases:
 ```
 apt-get install zlib1g-dev libseccomp-dev
 ```
 
-
-You also need a GO environment and to
-(`go get -u github.ibm.com/nabla-containers/nabla-build`). It is normal to see    the error:` Can't load package: ... no Go files in
-
+Finally build all of the base images:
 ```
-make submodules
-make build
-make test
+make
+```
+or just one:
+```
+make nginx-base
 ```
 
+
+### Using the bases
+
+TODO: we will have a repo of examples that use the bases that we can
+refer to later.

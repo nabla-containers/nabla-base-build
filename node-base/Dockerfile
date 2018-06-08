@@ -1,5 +1,5 @@
 FROM scratch
 
-ADD node.nablet /node.nablet
+COPY node.nabla /node.nabla
 
-ENTRYPOINT ["/node.nablet"]
+ENTRYPOINT ["/node.nabla"]

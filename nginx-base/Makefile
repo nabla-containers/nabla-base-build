@@ -15,29 +15,31 @@
 # TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 # PERFORMANCE OF THIS SOFTWARE.
 
-build: build_docker build_docker.alpine
+FILES=\
+data/www/logo150.png \
+data/www/index.html \
+data/conf/mime.types \
+data/conf/scgi_params \
+data/conf/fastcgi_params \
+data/conf/fastcgi.conf \
+data/conf/uwsgi_params \
+data/conf/nginx.conf \
+Dockerfile \
+Makefile \
 
-../build/nginx.nablet: FORCE
-	make -C ../ build/nginx.nablet
+all: build_docker
 
-../build/ukvm-bin: FORCE
-	make -C ../ build/ukvm-bin
+../build/nginx.nabla: FORCE
+	make -C ../ build/nginx.nabla
 
-nginx.nablet: ../build/nginx.nablet
-	install $< .
-
-ukvm-bin: ../build/ukvm-bin
+nginx.nabla: ../build/nginx.nabla
 	install $< .
 
 FORCE:
 
-build_docker: Dockerfile nginx.nablet ukvm-bin
+build_docker: $(FILES) nginx.nabla
 	sudo docker build -f Dockerfile -t nabla-nginx-base .
 	sudo docker tag nabla-nginx-base nablact/nabla-nginx-base
 
-build_docker.alpine: Dockerfile.alpine nginx.nablet ukvm-bin
-	sudo docker build -f Dockerfile.alpine -t nabla-nginx-base:alpine .
-	sudo docker tag nabla-nginx-base:alpine nablact/nabla-nginx-base:alpine
-
 clean:
-	rm -f nginx.nablet ukvm-bin
+	rm -f nginx.nabla 

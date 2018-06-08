@@ -1,8 +1,7 @@
 FROM scratch
 
-ADD redis-server.nablet /redis-server.nablet
+COPY redis-server.nabla /redis-server.nabla
+COPY redisaof.conf /data/conf/redisaof.conf
+COPY redis.conf /data/conf/redis.conf
 
-ADD redisaof.conf /data/conf/redisaof.conf
-ADD redis.conf /data/conf/redis.conf
-
-ENTRYPOINT ["/redis-server.nablet"]
+ENTRYPOINT ["/redis-server.nabla"]
