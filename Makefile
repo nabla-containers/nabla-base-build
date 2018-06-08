@@ -58,16 +58,15 @@ build/python3.nablet: rumprun-packages/python3/python.seccomp
 build/nginx.nablet: rumprun-packages/nginx/bin/nginx.seccomp
 	install -m 775 -D $< $@
 
-# should print "Hello, Rump!!" (among a lot of other stuff)
-.PHONY: test-node
-test-node: build
-	sudo build/nabla_run -tap tap007 -ukvm build/ukvm-bin -unikernel build/node.nablet build/python3.nablet
-
-.PHONY: clean distclean clean_solo5 clean_rump clean_node clean_node
+.PHONY: clean distclean clean_solo5 clean_rump 
 clean:
 	rm -rf build/
 
 distclean: clean_solo5 clean_rump
+	make clean -C rumprun-packages/nodejs
+	make clean -C rumprun-packages/redis
+	make clean -C rumprun-packages/nginx
+	make clean -C rumprun-packages/python3
 
 clean_solo5:
 	make clean -C solo5
@@ -75,7 +74,3 @@ clean_solo5:
 clean_rump:
 	rm -f $(RUMP_SOLO5_SECCOMP) $(RUMP_LIBC)
 	make clean -C rumprun
-
-clean_node:
-	make clean -C rumprun-packages/nodejs
-
