@@ -23,42 +23,21 @@ build: build_docker build_docker.alpine
 ../build/ukvm-bin: FORCE
 	make -C ../ build/ukvm-bin
 
-../build/nabla_run: FORCE
-	make -C ../ build/nabla_run
-
 nginx.nablet: ../build/nginx.nablet
 	install $< .
 
 ukvm-bin: ../build/ukvm-bin
 	install $< .
 
-nabla_run: ../build/nabla_run
-	install $< .
-
 FORCE:
 
-build_docker: Dockerfile nabla_run nginx.nablet ukvm-bin
+build_docker: Dockerfile nginx.nablet ukvm-bin
 	sudo docker build -f Dockerfile -t nabla-nginx-base .
 	sudo docker tag nabla-nginx-base nablact/nabla-nginx-base
 
-build_docker.alpine: Dockerfile.alpine nabla_run nginx.nablet ukvm-bin
+build_docker.alpine: Dockerfile.alpine nginx.nablet ukvm-bin
 	sudo docker build -f Dockerfile.alpine -t nabla-nginx-base:alpine .
 	sudo docker tag nabla-nginx-base:alpine nablact/nabla-nginx-base:alpine
 
-test_docker: nabla_run ukvm-bin
-	# There is no /tmp in a scratch image, so we need to fake one.
-	mkdir -p tmp
-	sudo docker run --expose 80 --rm -it --cap-add=NET_ADMIN \
-		-v $(CURDIR)/tmp:/tmp \
-		-v $(CURDIR)/nabla_run:/nabla_run \
-		-v $(CURDIR)/ukvm-bin:/ukvm-bin \
-		nablact/nabla-nginx-base \
-		--volume /data:/data -- -c /data/conf/nginx.conf
-
-test_docker.alpine:
-	sudo docker run --expose 80 --rm -it --cap-add=NET_ADMIN \
-		nablact/nabla-nginx-base:alpine \
-		--volume /data:/data -- -c /data/conf/nginx.conf
-
 clean:
-	rm -f nabla_run nginx.nablet ukvm-bin
+	rm -f nginx.nablet ukvm-bin

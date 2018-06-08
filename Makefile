@@ -4,7 +4,7 @@ default: build
 submodules:
 	git submodule update --init
 
-build: build/node.nablet build/ukvm-bin build/nabla_run build/redis-server.nablet build/python3.nablet build/nginx.nablet
+build: build/node.nablet build/ukvm-bin run build/redis-server.nablet build/python3.nablet build/nginx.nablet
 
 test: test-node
 
@@ -49,10 +49,6 @@ rumprun-packages/nginx/bin/nginx.seccomp: $(RUMP_SOLO5_SECCOMP) $(RUMP_LIBC) rum
 	source rumprun/obj/config-PATH.sh && make -C rumprun-packages/nginx all
 	source rumprun/obj/config-PATH.sh && make -C rumprun-packages/nginx bin/nginx.seccomp
 
-NABLA_RUN=nabla-build/nabla-run/cli/nabla_run/nabla_run
-
-$(NABLA_RUN):
-	make -C nabla-build build
 
 build/node.nablet: rumprun-packages/nodejs/node.seccomp
 	install -m 775 -D $< $@
@@ -69,19 +65,15 @@ build/nginx.nablet: rumprun-packages/nginx/bin/nginx.seccomp
 build/ukvm-bin: solo5/ukvm/ukvm-bin
 	install -m 775 -D solo5/ukvm/ukvm-bin $@
 
-build/nabla_run: $(NABLA_RUN)
-	install -m 775 -D $(NABLA_RUN) $@
-
-# should print "Hello, Rump!!" (among a lot of other stuff)
-.PHONY: test-node
-test-node: build
-	sudo build/nabla_run -tap tap007 -ukvm build/ukvm-bin -unikernel build/node.nablet build/python3.nablet
-
-.PHONY: clean distclean clean_solo5 clean_rump clean_node clean_node clean_nabla_run
+.PHONY: clean distclean clean_solo5 clean_rump clean_node
 clean:
 	rm -rf build/
 
 distclean: clean_solo5 clean_rump
+	make clean -C rumprun-packages/nodejs
+	make clean -C rumprun-packages/redis
+	make clean -C rumprun-packages/nginx
+	make clean -C rumprun-packages/python3
 
 clean_solo5:
 	make clean -C solo5
@@ -89,9 +81,3 @@ clean_solo5:
 clean_rump:
 	rm -f $(RUMP_SOLO5_SECCOMP) $(RUMP_LIBC)
 	make clean -C rumprun
-
-clean_node:
-	make clean -C rumprun-packages/nodejs
-
-clean_node:
-	make clean -C nabla-run

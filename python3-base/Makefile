@@ -23,42 +23,17 @@ build: build_docker.alpine
 ../build/ukvm-bin: FORCE
 	make -C ../ build/ukvm-bin
 
-../build/nabla_run: FORCE
-	make -C ../ build/nabla_run
-
 python3.nablet: ../build/python3.nablet
 	install $< .
 
 ukvm-bin: ../build/ukvm-bin
 	install $< .
 
-nabla_run: ../build/nabla_run
-	install $< .
-
 FORCE:
 
-build_docker: Dockerfile nabla_run python3.nablet ukvm-bin
+build_docker: Dockerfile python3.nablet ukvm-bin
 	sudo docker build -f Dockerfile -t nabla-python3-base .
 	sudo docker tag nabla-python3-base nablact/nabla-python3-base
 
-build_docker.alpine: Dockerfile.alpine nabla_run python3.nablet ukvm-bin
-	sudo docker build -f Dockerfile.alpine -t nabla-python3-base:alpine .
-	sudo docker tag nabla-python3-base:alpine nablact/nabla-python3-base:alpine
-
-test_docker:
-	# There is no /tmp in a scratch image, so we need to fake one.
-	mkdir -p tmp
-	sudo docker run --rm -it --cap-add=NET_ADMIN \
-		-v $(CURDIR)/tmp:/tmp \
-		-v $(CURDIR)/nabla_run:/nabla_run \
-		-v $(CURDIR)/ukvm-bin:/ukvm-bin \
-		nablact/nabla-python3-base \
-	       	--env PYTHONHOME=/usr/local -- -c "print(\"Hi\")"
-
-test_docker.alpine:
-	sudo docker run --rm -it --cap-add=NET_ADMIN \
-		nablact/nabla-python3-base:alpine \
-		--env PYTHONHOME=/python -- -c "print(\"Hi\")"
-
 clean:
-	rm -f nabla_run python3.nablet ukvm-bin
+	rm -f python3.nablet ukvm-bin
