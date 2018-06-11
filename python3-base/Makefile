@@ -15,25 +15,32 @@
 # TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 # PERFORMANCE OF THIS SOFTWARE.
 
-build: build_docker.alpine
+FILES=\
+rootfs/etc/services \
+rootfs/etc/pwd.db \
+rootfs/etc/group \
+rootfs/etc/nsswitch.conf \
+rootfs/etc/spwd.db \
+rootfs/etc/hosts \
+rootfs/etc/master.passwd \
+rootfs/etc/protocols \
+rootfs/etc/resolv.conf \
+Dockerfile \
+Makefile \
 
-../build/python3.nablet: FORCE
-	make -C ../ build/python3.nablet
+all: build_docker
 
-../build/ukvm-bin: FORCE
-	make -C ../ build/ukvm-bin
+../build/python3.nabla: FORCE
+	make -C ../ build/python3.nabla
 
-python3.nablet: ../build/python3.nablet
-	install $< .
-
-ukvm-bin: ../build/ukvm-bin
+python3.nabla: ../build/python3.nabla
 	install $< .
 
 FORCE:
 
-build_docker: Dockerfile python3.nablet ukvm-bin
+build_docker: $(FILES) python3.nabla
 	sudo docker build -f Dockerfile -t nabla-python3-base .
 	sudo docker tag nabla-python3-base nablact/nabla-python3-base
 
 clean:
-	rm -f python3.nablet ukvm-bin
+	rm -f python3.nabla

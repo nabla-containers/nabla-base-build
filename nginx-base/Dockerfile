@@ -1,8 +1,6 @@
 FROM scratch
 
-ADD nginx.nablet /nginx.nablet
-
-COPY rootfs /
+COPY nginx.nabla /nginx.nabla
 COPY data /data
 
-ENTRYPOINT ["/nginx.nablet"]
+ENTRYPOINT ["/nginx.nabla"]

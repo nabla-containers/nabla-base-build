@@ -15,24 +15,25 @@
 # TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 # PERFORMANCE OF THIS SOFTWARE.
 
-build: build_docker.alpine
+FILES=\
+Dockerfile \
+Makefile \
+redisaof.conf \
+redis.conf \
 
-../build/redis-server.nablet: FORCE
-	make -C ../ build/redis-server.nablet
 
-../build/ukvm-bin: FORCE
-	make -C ../ build/ukvm-bin
+all: build_docker
 
-redis-server.nablet: ../build/redis-server.nablet
-	install $< .
+../build/redis-server.nabla: FORCE
+	make -C ../ build/redis-server.nabla
 
-ukvm-bin: ../build/ukvm-bin
+redis-server.nabla: ../build/redis-server.nabla
 	install $< .
 
 FORCE:
 
-build_docker: Dockerfile redis-server.nablet ukvm-bin
+build_docker: $(FILES) redis-server.nabla
 	sudo docker build -f Dockerfile -t nabla-redis-base .
 	sudo docker tag nabla-redis-base nablact/nabla-redis-base
 clean:
-	rm -f redis-server.nablet ukvm-bin
+	rm -f redis-server.nabla

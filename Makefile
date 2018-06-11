@@ -1,22 +1,26 @@
-default: build
+
+.PHONY: nginx-base node-base python3-base redis-base
+all: nginx-base node-base python3-base redis-base
+
+nginx-base:
+	make -C $@
+node-base:
+	make -C $@
+python3-base:
+	make -C $@
+redis-base:
+	make -C $@
 
 .PHONY: submodules
 submodules:
 	git submodule update --init
 
-build: build/node.nablet build/ukvm-bin run build/redis-server.nablet build/python3.nablet build/nginx.nablet
-
-test: test-node
-
 SOLO5_OBJ=solo5/kernel/ukvm/solo5.o
 
-solo5: $(SOLO5_OBJ) solo5/ukvm/ukvm-bin
+solo5: $(SOLO5_OBJ)
 
 $(SOLO5_OBJ):
 	UKVM_STATIC=yes make -C solo5 ukvm
-
-solo5/ukvm/ukvm-bin:
-	UKVM_STATIC=yes make -C solo5/ukvm
 
 RUMP_SOLO5_X86_64=rumprun/rumprun-solo5/rumprun-x86_64
 RUMP_SOLO5_SECCOMP=$(RUMP_SOLO5_X86_64)/lib/rumprun-solo5/libsolo5_seccomp.a
@@ -49,23 +53,19 @@ rumprun-packages/nginx/bin/nginx.seccomp: $(RUMP_SOLO5_SECCOMP) $(RUMP_LIBC) rum
 	source rumprun/obj/config-PATH.sh && make -C rumprun-packages/nginx all
 	source rumprun/obj/config-PATH.sh && make -C rumprun-packages/nginx bin/nginx.seccomp
 
-
-build/node.nablet: rumprun-packages/nodejs/node.seccomp
+build/node.nabla: rumprun-packages/nodejs/node.seccomp
 	install -m 775 -D $< $@
 
-build/redis-server.nablet: rumprun-packages/redis/bin/redis-server.seccomp
+build/redis-server.nabla: rumprun-packages/redis/bin/redis-server.seccomp
 	install -m 775 -D $< $@
 
-build/python3.nablet: rumprun-packages/python3/python.seccomp
+build/python3.nabla: rumprun-packages/python3/python.seccomp
 	install -m 775 -D $< $@
 
-build/nginx.nablet: rumprun-packages/nginx/bin/nginx.seccomp
+build/nginx.nabla: rumprun-packages/nginx/bin/nginx.seccomp
 	install -m 775 -D $< $@
 
-build/ukvm-bin: solo5/ukvm/ukvm-bin
-	install -m 775 -D solo5/ukvm/ukvm-bin $@
-
-.PHONY: clean distclean clean_solo5 clean_rump clean_node
+.PHONY: clean distclean clean_solo5 clean_rump 
 clean:
 	rm -rf build/
 

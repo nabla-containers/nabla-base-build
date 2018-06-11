@@ -15,25 +15,23 @@
 # TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 # PERFORMANCE OF THIS SOFTWARE.
 
-build: build_docker build_docker.alpine
+FILES=\
+Dockerfile \
+Makefile \
 
-../build/node.nablet: FORCE
-	make -C ../ build/node.nablet
+all: build_docker
 
-../build/ukvm-bin: FORCE
-	make -C ../ build/ukvm-bin
+../build/node.nabla: FORCE
+	make -C ../ build/node.nabla
 
-node.nablet: ../build/node.nablet
-	install $< .
-
-ukvm-bin: ../build/ukvm-bin
+node.nabla: ../build/node.nabla
 	install $< .
 
 FORCE:
 
-build_docker: Dockerfile node.nablet ukvm-bin
+build_docker: $(FILES) node.nabla
 	sudo docker build -f Dockerfile -t nabla-node-base .
 	sudo docker tag nabla-node-base nablact/nabla-node-base
 
 clean:
-	rm -f node.nablet ukvm-bin
+	rm -f node.nabla
