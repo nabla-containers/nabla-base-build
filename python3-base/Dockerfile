@@ -8,4 +8,5 @@ FROM scratch
 COPY python3.nabla /python3.nabla
 COPY rootfs /
 COPY --from=0 /usr/local/lib /usr/local/lib
+ENV PYTHONHOME=/usr/local
 ENTRYPOINT ["/python3.nabla"]
