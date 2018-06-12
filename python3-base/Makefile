@@ -44,7 +44,7 @@ FORCE:
 dev:
 	mkdir -p rootfs/dev
 	dd if=/dev/urandom of=rootfs/dev/urandom count=1024 bs=1024
-	dd if=/dev/random of=rootfs/dev/random count=1024 bs=1024
+	dd if=/dev/urandom of=rootfs/dev/random count=1024 bs=1024
 
 build_docker: $(FILES) python3.nabla dev
 	sudo docker build -f Dockerfile -t nabla-python3-base .

@@ -35,7 +35,7 @@ FORCE:
 dev:
 	mkdir -p dev
 	dd if=/dev/urandom of=dev/urandom count=1024 bs=1024
-	dd if=/dev/random of=dev/random count=1024 bs=1024
+	dd if=/dev/urandom of=dev/random count=1024 bs=1024
 
 build_docker: $(FILES) node.nabla dev
 	sudo docker build -f Dockerfile -t nabla-node-base .
