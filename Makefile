@@ -68,12 +68,16 @@ build/nginx.nabla: rumprun-packages/nginx/bin/nginx.seccomp
 .PHONY: clean distclean clean_solo5 clean_rump 
 clean:
 	rm -rf build/
+	make clean -C node-base
+	make clean -C nginx-base
+	make clean -C redis-base
+	make clean -C python3-base
 
 distclean: clean_solo5 clean_rump
-	make clean -C rumprun-packages/nodejs
+	make distclean -C rumprun-packages/nodejs
 	make clean -C rumprun-packages/redis
-	make clean -C rumprun-packages/nginx
-	make clean -C rumprun-packages/python3
+	make distclean -C rumprun-packages/nginx
+	make distclean -C rumprun-packages/python3
 
 clean_solo5:
 	make clean -C solo5
