@@ -1,12 +1,12 @@
 [submodule "rumprun"]
 	path = rumprun
-	url = https://github.com/ricarkol/rumprun
+	url = https://github.com/nabla-containers/rumprun
 	branch = solo5
 [submodule "rumprun-packages"]
 	path = rumprun-packages
-	url = https://github.com/ricarkol/rumprun-packages
+	url = https://github.com/nabla-containers/rumprun-packages
 	branch = solo5
 [submodule "solo5"]
 	path = solo5
-	url = https://github.com/ricarkol/solo5
+	url = https://github.com/nabla-containers/solo5
 	branch = ukvm-linux-seccomp
