@@ -53,6 +53,9 @@ rumprun-packages/nginx/bin/nginx.seccomp: $(RUMP_SOLO5_SECCOMP) $(RUMP_LIBC) rum
 	source rumprun/obj/config-PATH.sh && make -C rumprun-packages/nginx all
 	source rumprun/obj/config-PATH.sh && make -C rumprun-packages/nginx bin/nginx.seccomp
 
+rumprun/tcp_test/test_curl.nabla: $(RUMP_SOLO5_SECCOMP) $(RUMP_LIBC)
+	source rumprun/obj/config-PATH.sh && make -C rumprun/tcp_test test_curl.nabla
+
 build/node.nabla: rumprun-packages/nodejs/node.seccomp
 	install -m 775 -D $< $@
 
@@ -63,6 +66,9 @@ build/python3.nabla: rumprun-packages/python3/python.seccomp
 	install -m 775 -D $< $@
 
 build/nginx.nabla: rumprun-packages/nginx/bin/nginx.seccomp
+	install -m 775 -D $< $@
+
+build/test_curl.nabla: rumprun/tcp_test/test_curl.nabla
 	install -m 775 -D $< $@
 
 .PHONY: clean distclean clean_solo5 clean_rump 
@@ -78,6 +84,7 @@ distclean: clean_solo5 clean_rump
 	make clean -C rumprun-packages/redis
 	make distclean -C rumprun-packages/nginx
 	make distclean -C rumprun-packages/python3
+	make clean -C rumprun/tcp_test
 
 clean_solo5:
 	make clean -C solo5
