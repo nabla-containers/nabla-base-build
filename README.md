@@ -32,5 +32,7 @@ make nginx-base
 
 ### Using the bases
 
-TODO: we will have a repo of examples that use the bases that we can
-refer to later.
+To see how to use these bases in practice for your own applications,
+see the
+[nabla-containers/nabla-demo-apps](https://github.com/nabla-containers/nabla-demo-apps)
+repository.
