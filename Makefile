@@ -1,94 +1,100 @@
 
-.PHONY: nginx-base node-base python3-base redis-base
-all: nginx-base node-base python3-base redis-base
+all:
+	@echo "To build a base image, run 'make'"
+	@echo "in the package directory."
+	@echo
+	@echo "To build all packages, run 'make world'."
 
-nginx-base:
-	make -C $@
-node-base:
-	make -C $@
-python3-base:
-	make -C $@
-redis-base:
-	make -C $@
 
-.PHONY: submodules
-submodules:
-	git submodule update --init
+# .PHONY: nginx-base node-base python3-base redis-base
+# all: nginx-base node-base python3-base redis-base
 
-SOLO5_OBJ=solo5/kernel/ukvm/solo5.o
+# nginx-base:
+# 	make -C $@
+# node-base:
+# 	make -C $@
+# python3-base:
+# 	make -C $@
+# redis-base:
+# 	make -C $@
 
-solo5: $(SOLO5_OBJ)
+# .PHONY: submodules
+# submodules:
+# 	git submodule update --init
 
-$(SOLO5_OBJ):
-	UKVM_STATIC=yes make -C solo5 ukvm
+# SOLO5_OBJ=solo5/kernel/ukvm/solo5.o
 
-RUMP_SOLO5_X86_64=rumprun/rumprun-solo5/rumprun-x86_64
-RUMP_SOLO5_SECCOMP=$(RUMP_SOLO5_X86_64)/lib/rumprun-solo5/libsolo5_seccomp.a
-RUMP_LIBC=$(RUMP_SOLO5_X86_64)/lib/libc.a
+# solo5: $(SOLO5_OBJ)
+# $(SOLO5_OBJ):
+# 	UKVM_STATIC=yes make -C solo5 ukvm
 
-rumprun: $(RUMP_SOLO5_SECCOMP) $(RUMP_LIBC)
+# RUMP_SOLO5_X86_64=rumprun/rumprun-solo5/rumprun-x86_64
+# RUMP_SOLO5_SECCOMP=$(RUMP_SOLO5_X86_64)/lib/rumprun-solo5/libsolo5_seccomp.a
+# RUMP_LIBC=$(RUMP_SOLO5_X86_64)/lib/libc.a
 
-$(RUMP_LIBC):
-	cd rumprun && git submodule update --init
-	make -C rumprun build
+# rumprun: $(RUMP_SOLO5_SECCOMP) $(RUMP_LIBC)
 
-$(RUMP_SOLO5_SECCOMP): $(SOLO5_OBJ)
-	install -m 664 -D $(SOLO5_OBJ) $@
+# $(RUMP_LIBC):
+# 	cd rumprun && git submodule update --init
+# 	make -C rumprun build
 
-rumprun-packages/config.mk:
-	install -m 664 -D rumprun-packages/config.mk.dist $@
+# $(RUMP_SOLO5_SECCOMP): $(SOLO5_OBJ)
+# 	install -m 664 -D $(SOLO5_OBJ) $@
 
-SHELL := /bin/bash
+# rumprun-packages/config.mk:
+# 	install -m 664 -D rumprun-packages/config.mk.dist $@
 
-rumprun-packages/nodejs/node.seccomp: $(RUMP_SOLO5_SECCOMP) $(RUMP_LIBC) rumprun-packages/config.mk
-	source rumprun/obj/config-PATH.sh && make -C rumprun-packages/nodejs node.seccomp
+# SHELL := /bin/bash
 
-rumprun-packages/redis/bin/redis-server.seccomp: $(RUMP_SOLO5_SECCOMP) $(RUMP_LIBC) rumprun-packages/config.mk
-	source rumprun/obj/config-PATH.sh && make -C rumprun-packages/redis bin/redis-server.seccomp
+# rumprun-packages/nodejs/node.seccomp: $(RUMP_SOLO5_SECCOMP) $(RUMP_LIBC) rumprun-packages/config.mk
+# 	source rumprun/obj/config-PATH.sh && make -C rumprun-packages/nodejs node.seccomp
 
-rumprun-packages/python3/python.seccomp: $(RUMP_SOLO5_SECCOMP) $(RUMP_LIBC) rumprun-packages/config.mk
-	source rumprun/obj/config-PATH.sh && make -C rumprun-packages/python3 python.seccomp
+# rumprun-packages/redis/bin/redis-server.seccomp: $(RUMP_SOLO5_SECCOMP) $(RUMP_LIBC) rumprun-packages/config.mk
+# 	source rumprun/obj/config-PATH.sh && make -C rumprun-packages/redis bin/redis-server.seccomp
 
-rumprun-packages/nginx/bin/nginx.seccomp: $(RUMP_SOLO5_SECCOMP) $(RUMP_LIBC) rumprun-packages/config.mk
-	source rumprun/obj/config-PATH.sh && make -C rumprun-packages/nginx all
-	source rumprun/obj/config-PATH.sh && make -C rumprun-packages/nginx bin/nginx.seccomp
+# rumprun-packages/python3/python.seccomp: $(RUMP_SOLO5_SECCOMP) $(RUMP_LIBC) rumprun-packages/config.mk
+# 	source rumprun/obj/config-PATH.sh && make -C rumprun-packages/python3 python.seccomp
 
-rumprun/tcp_test/test_curl.nabla: $(RUMP_SOLO5_SECCOMP) $(RUMP_LIBC)
-	source rumprun/obj/config-PATH.sh && make -C rumprun/tcp_test test_curl.nabla
+# rumprun-packages/nginx/bin/nginx.seccomp: $(RUMP_SOLO5_SECCOMP) $(RUMP_LIBC) rumprun-packages/config.mk
+# 	source rumprun/obj/config-PATH.sh && make -C rumprun-packages/nginx all
+# 	source rumprun/obj/config-PATH.sh && make -C rumprun-packages/nginx bin/nginx.seccomp
 
-build/node.nabla: rumprun-packages/nodejs/node.seccomp
-	install -m 775 -D $< $@
+# rumprun/tcp_test/test_curl.nabla: $(RUMP_SOLO5_SECCOMP) $(RUMP_LIBC)
+# 	source rumprun/obj/config-PATH.sh && make -C rumprun/tcp_test test_curl.nabla
 
-build/redis-server.nabla: rumprun-packages/redis/bin/redis-server.seccomp
-	install -m 775 -D $< $@
+# build/node.nabla: rumprun-packages/nodejs/node.seccomp
+# 	install -m 775 -D $< $@
 
-build/python3.nabla: rumprun-packages/python3/python.seccomp
-	install -m 775 -D $< $@
+# build/redis-server.nabla: rumprun-packages/redis/bin/redis-server.seccomp
+# 	install -m 775 -D $< $@
 
-build/nginx.nabla: rumprun-packages/nginx/bin/nginx.seccomp
-	install -m 775 -D $< $@
+# build/python3.nabla: rumprun-packages/python3/python.seccomp
+# 	install -m 775 -D $< $@
 
-build/test_curl.nabla: rumprun/tcp_test/test_curl.nabla
-	install -m 775 -D $< $@
+# build/nginx.nabla: rumprun-packages/nginx/bin/nginx.seccomp
+# 	install -m 775 -D $< $@
 
-.PHONY: clean distclean clean_solo5 clean_rump 
-clean:
-	rm -rf build/
-	make clean -C node-base
-	make clean -C nginx-base
-	make clean -C redis-base
-	make clean -C python3-base
+# build/test_curl.nabla: rumprun/tcp_test/test_curl.nabla
+# 	install -m 775 -D $< $@
 
-distclean: clean_solo5 clean_rump
-	make distclean -C rumprun-packages/nodejs
-	make clean -C rumprun-packages/redis
-	make distclean -C rumprun-packages/nginx
-	make distclean -C rumprun-packages/python3
-	make clean -C rumprun/tcp_test
+# .PHONY: clean distclean clean_solo5 clean_rump 
+# clean:
+# 	rm -rf build/
+# 	make clean -C node-base
+# 	make clean -C nginx-base
+# 	make clean -C redis-base
+# 	make clean -C python3-base
 
-clean_solo5:
-	make clean -C solo5
+# distclean: clean_solo5 clean_rump
+# 	make distclean -C rumprun-packages/nodejs
+# 	make clean -C rumprun-packages/redis
+# 	make distclean -C rumprun-packages/nginx
+# 	make distclean -C rumprun-packages/python3
+# 	make clean -C rumprun/tcp_test
 
-clean_rump:
-	rm -f $(RUMP_SOLO5_SECCOMP) $(RUMP_LIBC)
-	make clean -C rumprun
+# clean_solo5:
+# 	make clean -C solo5
+
+# clean_rump:
+# 	rm -f $(RUMP_SOLO5_SECCOMP) $(RUMP_LIBC)
+# 	make clean -C rumprun
