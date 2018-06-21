@@ -1,0 +1,6 @@
+nginx-base/nginx.nabla
+node-base/dev/
+node-base/node.nabla
+python3-base/dev/
+python3-base/python3.nabla
+redis-base/redis.nabla
