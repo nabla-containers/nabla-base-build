@@ -15,7 +15,7 @@
 # CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 # These build targets are used by all rumprun-based nabla bases; their
-# Makefiles include this one	.
+# Makefiles include this one.
 
 SHELL := /bin/bash
 
@@ -28,7 +28,7 @@ rumprun-clean:
 
 .PHONY: solo5
 solo5: FORCE
-	UKVM_STATIC=yes make -C $(TOP)/solo5 ukvm
+	make -C $(TOP)/solo5 ukvm
 
 solo5-clean:
 	make -C $(TOP)/solo5 clean
