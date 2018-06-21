@@ -11,7 +11,7 @@ containers.  So far we provide the following:
 
 First fetch the submodules (solo5, rumprun, and rumprun-packages):
 ```
-make submodules
+git submodule update --init --recursive
 ```
 
 Ensure you have the following prerequisites on your system for
