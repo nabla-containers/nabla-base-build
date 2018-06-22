@@ -19,15 +19,31 @@
 
 SHELL := /bin/bash
 
+SUBMOD_NEEDS_UPDATE=$(shell [ -z "`git submodule | grep -v "^ "`" ] && echo 0 || echo 1)
+
+ifeq ($(SUBMOD_NEEDS_UPDATE), 1)
+submodule_warning:
+	$(info #################################################################)
+	$(info # Warning: git submodule out of date!!!!                        #)
+	$(info #          Please run `git submodule update --init --recursive` #)
+	$(info #################################################################)
+	$(info )
+	$(info Continuing in 5 seconds...)
+	$(shell	sleep 5)
+else
+submodule_warning:
+
+endif
+
 .PHONY: rumprun
-rumprun: FORCE
+rumprun: FORCE submodule_warning
 	make -C $(TOP)/rumprun build
 
 rumprun-clean:
 	make -C $(TOP)/rumprun clean
 
 .PHONY: solo5
-solo5: FORCE
+solo5: FORCE submodule_warning
 	make -C $(TOP)/solo5 ukvm
 
 solo5-clean:

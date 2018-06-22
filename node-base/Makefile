@@ -42,7 +42,7 @@ dev:
 	dd if=/dev/urandom of=dev/urandom count=1024 bs=1024
 	dd if=/dev/urandom of=dev/random count=1024 bs=1024
 
-build_docker: $(FILES) dev rumprun-packages-nodejs
+build_docker: submodule_warning $(FILES) dev rumprun-packages-nodejs
 	sudo docker build -f Dockerfile -t nabla-node-base .
 	sudo docker tag nabla-node-base nablact/nabla-node-base
 
