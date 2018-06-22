@@ -6,6 +6,12 @@ RUN apk update && apk add iproute2 git
 
 FROM scratch
 COPY python3.nabla /python3.nabla
+
+# XXX: This is a temporary horrible hack which should disappear as soon as we
+# fix a rumprun issue we introduced by trying to mount the root which is over
+# writing rumprun's /dev devices (like random).
+COPY dev /dev
+
 COPY rootfs /
 COPY --from=0 /usr/local/lib /usr/local/lib
 ENV PYTHONHOME=/usr/local
