@@ -23,10 +23,10 @@ SUBMOD_NEEDS_UPDATE=$(shell [ -z "`git submodule | grep -v "^ "`" ] && echo 0 ||
 
 ifeq ($(SUBMOD_NEEDS_UPDATE), 1)
 submodule_warning:
-	$(info #####################################################)
-	$(info # Warning: git submodule out of date!!!!            #)
-	$(info #          Please run `git submodule update --init` #)
-	$(info #####################################################)
+	$(info #################################################################)
+	$(info # Warning: git submodule out of date!!!!                        #)
+	$(info #          Please run `git submodule update --init --recursive` #)
+	$(info #################################################################)
 	$(info )
 	$(info Continuing in 5 seconds...)
 	$(shell	sleep 5)
