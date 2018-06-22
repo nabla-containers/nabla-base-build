@@ -1,0 +1,23 @@
+# Copyright (c) 2018, IBM
+# Copyright 2012-2015 Docker, Inc.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+# Based on the opencontainers/runc .travis.yml file.
+
+language: c
+
+sudo: required
+services:
+  - docker
+
+before_install:
+  - echo "deb http://archive.ubuntu.com/ubuntu trusty-backports main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
+  - sudo apt-get -qq update
+  - sudo apt-get install -y make gcc g++ libseccomp-dev/trusty-backports genisoimage
+  - env | grep TRAVIS_
+
+script:
+  - git submodule update --init --recursive
+  - make -j2 world > /dev/null
+  - make integration
