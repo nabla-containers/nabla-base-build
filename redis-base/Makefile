@@ -36,7 +36,7 @@ rumprun-packages-redis: rumprun solo5 FORCE
 rumprun-packages-redis-clean:
 	make -C $(RUMPPKGS)/redis clean
 
-build_docker: $(FILES) rumprun-packages-redis
+build_docker: submodule_warning $(FILES) rumprun-packages-redis
 	sudo docker build -f Dockerfile -t nabla-redis-base .
 	sudo docker tag nabla-redis-base nablact/nabla-redis-base
 

@@ -42,7 +42,7 @@ rumprun-packages-nginx: rumprun solo5 FORCE
 rumprun-packages-nginx-clean:
 	make -C $(RUMPPKGS)/nginx clean
 
-build_docker: $(FILES) rumprun-packages-nginx
+build_docker: submodule_warning $(FILES) rumprun-packages-nginx
 	sudo docker build -f Dockerfile -t nabla-nginx-base .
 	sudo docker tag nabla-nginx-base nablact/nabla-nginx-base
 
