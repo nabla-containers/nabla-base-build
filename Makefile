@@ -31,3 +31,6 @@ distclean:
 	make -C node-base distclean
 	make -C python3-base distclean
 	make -C redis-base distclean
+
+integration:
+	sudo tests/bats-core/bats -p tests/integration
