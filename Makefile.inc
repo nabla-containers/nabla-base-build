@@ -49,7 +49,7 @@ rumprun-clean:
 
 .PHONY: solo5
 solo5: FORCE submodule_warning
-	make -C $(TOP)/solo5 ukvm
+	make -C $(TOP)/solo5
 
 solo5-clean:
 	make -C $(TOP)/solo5 clean

@@ -19,5 +19,5 @@ before_install:
 
 script:
   - git submodule update --init --recursive
-  - make -j2 world > /dev/null
+  - bash travis_wait.sh 60 make -j2 --quiet world
   - make integration
