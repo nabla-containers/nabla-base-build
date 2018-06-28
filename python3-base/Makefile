@@ -43,19 +43,11 @@ rumprun-packages-python3: rumprun solo5 FORCE
 rumprun-packages-python3-clean:
 	make -C $(RUMPPKGS)/python3 clean
 
-# XXX: This is a temporary horrible hack which should disappear as soon as we
-# fix a rumprun issue we introduced by trying to mount the root which is over
-# writing rumprun's /dev devices (like random).
-dev:
-	mkdir -p dev
-	dd if=/dev/urandom of=dev/urandom count=1024 bs=1024
-	dd if=/dev/urandom of=dev/random count=1024 bs=1024
-
-build_docker: submodule_warning $(FILES) dev rumprun-packages-python3
+build_docker: submodule_warning $(FILES) rumprun-packages-python3
 	sudo docker build -f Dockerfile -t nabla-python3-base .
 	sudo docker tag nabla-python3-base nablact/nabla-python3-base
 
 clean:
-	rm -rf dev python3.nabla
+	rm -rf python3.nabla
 
 distclean: clean rumprun-packages-python3-clean solo5-clean rumprun-clean
