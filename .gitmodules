@@ -10,3 +10,6 @@
 	path = solo5
 	url = https://github.com/nabla-containers/solo5
 	branch = ukvm-linux-seccomp
+[submodule "gorump"]
+	path = gorump
+	url = https://github.com/nabla-containers/gorump

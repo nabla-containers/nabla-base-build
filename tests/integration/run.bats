@@ -68,3 +68,9 @@ function nabla_run() {
 	[[ "$output" == *"nginx version: nginx/1.8.0"* ]]
 	[ "$status" -eq 0 ]
 }
+
+@test "test raw go hello" {
+	nabla_run --disk="${BATS_TMPDIR}"/dummy ${TOPLEVEL}/tests/gotest/goapp.nabla
+	[[ "$output" == *"Hello, Rumprun.  This is Go."* ]]
+	[ "$status" -eq 0 ]
+}
