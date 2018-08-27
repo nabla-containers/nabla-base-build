@@ -20,5 +20,3 @@ ENV GOTOOLDIR="/gorump/pkg/tool/linux_amd64"
 ENV CGO_ENABLED="1" 
 ENV GOOS="rumprun" 
 ENV PATH="/gorump/bin:${PATH}"
-
-
