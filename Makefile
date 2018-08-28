@@ -25,6 +25,7 @@ world:
 	make -C node-base
 	make -C python3-base
 	make -C redis-base
+	make -C go-base
 
 distclean:
 	make -C nginx-base distclean
@@ -32,5 +33,8 @@ distclean:
 	make -C python3-base distclean
 	make -C redis-base distclean
 
-integration:
+gotest:
+	make -C tests/gotest
+
+integration: gotest
 	sudo tests/bats-core/bats -p tests/integration
