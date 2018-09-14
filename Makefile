@@ -32,6 +32,7 @@ distclean:
 	make -C node-base distclean
 	make -C python3-base distclean
 	make -C redis-base distclean
+	make -C go-base distclean
 
 gotest:
 	make -C tests/gotest

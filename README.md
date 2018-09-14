@@ -6,6 +6,7 @@ containers.  So far we provide the following:
     node-base
     python3-base
     redis-base
+    go-base
 
 ### Building the bases
 
