@@ -21,20 +21,15 @@ RUMPPKGS=$(TOP)/rumprun-packages
 RUMPRUN=$(TOP)/rumprun
 include ../Makefile.inc
 
-.PHONY: rumprun-packages-hello
-rumprun-packages-hello: rumprun solo5 FORCE
-	install -m 664 -D $(RUMPPKGS)/config.mk.dist $(RUMPPKGS)/config.mk
-	source $(RUMPRUN)/obj/config-PATH.sh && make -C $(RUMPPKGS)/hello bin/hello.seccomp
-	install -m 775 -D $(RUMPPKGS)/hello/bin/hello.seccomp hello.nabla
+.PHONY: rumprun-cc
+rumprun-cc: rumprun solo5 FORCE
+	cp -r $(RUMPRUN)/rumprun-solo5 rumprun-solo5
 
-rumprun-packages-hello-clean:
-	make -C $(RUMPPKGS)/hello clean
-
-build_docker: submodule_warning $(FILES) rumprun-packages-hello
-	sudo docker build -f Dockerfile -t nabla-hello-base .
-	sudo docker tag nabla-hello-base nablact/nabla-hello-base
+build_docker: submodule_warning $(FILES) rumprun-cc
+	sudo docker build -f Dockerfile -t nabla-cc-build .
+	sudo docker tag nabla-hello-base nablact/nabla-cc-build
 
 clean:
-	rm -rf hello.nabla
+	rm -rf rumprun-solo5
 
-distclean: clean rumprun-packages-hello-clean solo5-clean rumprun-clean
+distclean: clean solo5-clean rumprun-clean
