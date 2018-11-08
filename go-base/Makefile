@@ -23,6 +23,8 @@ GORUMP=$(TOP)/gorump
 GOBASE=$(TOP)/go-base
 GOBOOTSTRAP=$(TOP)/gobootstrap
 export GOROOT=$(GOBOOTSTRAP)
+unexport GOPATH
+unexport GOBIN
 
 include ../Makefile.inc
 
