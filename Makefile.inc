@@ -25,6 +25,7 @@ ifeq ($(SUBMOD_NEEDS_UPDATE), 1)
 submodule_warning:
 	$(info #################################################################)
 	$(info # Warning: git submodule out of date!!!!                        #)
+	$(info #          Please run `git submodule sync --recursive`          #)
 	$(info #          Please run `git submodule update --init --recursive` #)
 	$(info #################################################################)
 	$(info )
