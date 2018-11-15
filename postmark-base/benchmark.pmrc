@@ -1,0 +1,5 @@
+set transactions 2500
+set size 5120 524288
+set number 500
+run
+quit
