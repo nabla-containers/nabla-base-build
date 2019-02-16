@@ -25,11 +25,15 @@ FILES=\
 Dockerfile \
 Makefile \
 
+include $(RUMPPKGS)/nodejs/Makefile.inc
+
 .PHONY: rumprun-packages-nodejs
-rumprun-packages-nodejs: rumprun solo5 FORCE
+rumprun-packages-nodejs: rumprun FORCE
 	install -m 664 -D $(RUMPPKGS)/config.mk.dist $(RUMPPKGS)/config.mk
-	source $(RUMPRUN)/obj/config-PATH.sh && make -C $(RUMPPKGS)/nodejs all node.seccomp
-	install -m 775 -D $(RUMPPKGS)/nodejs/node.seccomp node.nabla
+	source $(RUMPRUN)/obj/config-PATH.sh && \
+		source $(RUMPRUN)/obj/config && \
+		make -C $(RUMPPKGS)/nodejs all $(BUILD_DIR)/node.spt
+	install -m 775 -D $(RUMPPKGS)/nodejs/$(BUILD_DIR)/node.spt node.nabla
 
 rumprun-packages-nodejs-clean:
 	make -C $(RUMPPKGS)/nodejs clean
@@ -41,4 +45,4 @@ build_docker: submodule_warning $(FILES) rumprun-packages-nodejs
 clean:
 	rm -rf node.nabla
 
-distclean: clean rumprun-packages-nodejs-clean solo5-clean rumprun-clean
+distclean: clean rumprun-packages-nodejs-clean rumprun-clean
