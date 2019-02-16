@@ -35,10 +35,10 @@ Dockerfile \
 Makefile \
 
 .PHONY: rumprun-packages-python3
-rumprun-packages-python3: rumprun solo5 FORCE
+rumprun-packages-python3: rumprun FORCE
 	install -m 664 -D $(RUMPPKGS)/config.mk.dist $(RUMPPKGS)/config.mk
-	source $(RUMPRUN)/obj/config-PATH.sh && make -C $(RUMPPKGS)/python3 all python.seccomp
-	install -m 775 -D $(RUMPPKGS)/python3/python.seccomp python3.nabla
+	source $(RUMPRUN)/obj/config-PATH.sh && source $(RUMPRUN)/obj/config && make -C $(RUMPPKGS)/python3 bin/python.spt
+	install -m 775 -D $(RUMPPKGS)/python3/bin/python.spt python3.nabla
 
 rumprun-packages-python3-clean:
 	make -C $(RUMPPKGS)/python3 clean
@@ -50,4 +50,4 @@ build_docker: submodule_warning $(FILES) rumprun-packages-python3
 clean:
 	rm -rf python3.nabla
 
-distclean: clean rumprun-packages-python3-clean solo5-clean rumprun-clean
+distclean: clean rumprun-packages-python3-clean rumprun-clean
