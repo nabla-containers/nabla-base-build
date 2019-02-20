@@ -39,18 +39,18 @@ gobootstrap: FORCE
 	curl -L https://storage.googleapis.com/golang/go1.6.2.linux-amd64.tar.gz | tar xz -C $(GOBOOTSTRAP) --strip-components=1 
 
 .PHONY: gorump
-gorump: gobootstrap rumprun solo5 FORCE
+gorump: gobootstrap rumprun FORCE
 	source $(RUMPRUN)/obj/config-PATH.sh && cd $(GORUMP)/go/src && CGO_ENABLED=0 GOROOT_BOOTSTRAP=$(GOBOOTSTRAP) GOOS=rumprun GOARCH=amd64 ./make.bash && cd $(GOBASE)
 	cp -r $(GORUMP)/go1.5 gorump
 	cp $(GORUMP)/go1.5/bin/go go
 	cp -r $(RUMPRUN) rumprun-solo5
 
 build_docker: submodule_warning $(FILES) gorump
-	sudo docker build -f Dockerfile -t nabla-go-base .
+	sudo docker build --build-arg host_rumproot=$(realpath ../rumprun) -f Dockerfile -t nabla-go-base .
 	sudo docker tag nabla-go-base nablact/nabla-go-base
 	rm -rf gobootstrap gorump rumprun-solo5
 
 clean:
 	rm -rf gobootstrap gorump rumprun-solo5
 
-distclean: clean solo5-clean rumprun-clean
+distclean: clean rumprun-clean
