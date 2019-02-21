@@ -7,11 +7,14 @@
 
 dist: xenial
 sudo: required
+services:
+  - docker
 language: c
 cache: ccache
-
 compiler:
   - gcc
+git:
+    submodules: true
 addons:
   apt:
     sources:
@@ -26,10 +29,16 @@ before_script:
   - sudo apt-get install --only-upgrade binutils gcc -y
   - export CC=gcc-6
   - export CXX=g++-6
-  - git submodule update --init --recursive
-  - bash travis_wait.sh 60 make -j16 --quiet world
+
+env:
+  - PLATFORM=solo5 MACHINE=x86_64
 
 script:
   - export CC=gcc-6
   - export CXX=g++-6
+  - (cd rumprun && NOGCCERROR=1 ./build-rr.sh -o obj -j16 -qq ${PLATFORM})
+  - bash travis_wait.sh 60 make --quiet -C go-base gorump
+  - bash travis_wait.sh 60 make --quiet -C nginx-base
+  - bash travis_wait.sh 60 make --quiet -C node-base
   - make integration
+#- make --quiet -C go-base build_docker

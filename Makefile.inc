@@ -37,11 +37,15 @@ submodule_warning:
 endif
 
 .PHONY: rumprun
-rumprun: FORCE submodule_warning
+rumprun: rumprun_stamp
+
+rumprun_stamp: submodule_warning
 	make -C $(TOP)/rumprun build
+	touch $@
 
 rumprun-clean:
 	make -C $(TOP)/rumprun clean
+	rm rumprun_stamp
 
 .PHONY: FORCE
 

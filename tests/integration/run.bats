@@ -51,12 +51,14 @@ function nabla_run() {
 }
 
 @test "test raw python version" {
+	skip "Not building python in travis (too slow)"
 	nabla_run ${TOPLEVEL}/python3-base/python3.nabla -- '{"cmdline":"python --version"}'
 	[[ "$output" == *"Python 3.5.2"* ]]
 	[ "$status" -eq 0 ]
 }
 
 @test "test raw redis version" {
+	skip "Not building redis in travis (too slow)"
 	nabla_run ${TOPLEVEL}/redis-base/redis.nabla -- '{"cmdline":"redis --version"}'
 	[[ "$output" == *"Redis server v=3.0.6"* ]]
 	[ "$status" -eq 0 ]

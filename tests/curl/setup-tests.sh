@@ -1,4 +1,7 @@
-# Copyright (c) 2018 Contributors as noted in the AUTHORS file
+#!/bin/sh
+# Copyright (c) 2015-2017 Contributors as noted in the AUTHORS file
+#
+# This file is part of Solo5, a unikernel base layer.
 #
 # Permission to use, copy, modify, and/or distribute this software
 # for any purpose with or without fee is hereby granted, provided
@@ -14,26 +17,28 @@
 # NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
 # CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-all:
-	@echo "To build a base image, run 'make'"
-	@echo "in the package directory."
-	@echo
-	@echo "To build all packages, run 'make world'."
+#
+# Set up test environment.
+#
+# Convention is: tap interface named 'tap100', host address of 10.0.0.1/24.
+#
 
-world:
-	make -C nginx-base
-	make -C node-base
-	make -C python3-base
-	make -C redis-base
-	make -C go-base
+if [ $(id -u) -ne 0 ]; then
+    echo "$0: must be root" 1>&2
+    exit 1
+fi
 
-distclean:
-	make -C nginx-base distclean
-	make -C node-base distclean
-	make -C python3-base distclean
-	make -C redis-base distclean
-	make -C go-base distclean
-
-integration:
-	make -C tests
-	sudo tests/bats-core/bats -p tests/integration
+case `uname -s` in
+Linux)
+    ip tuntap add tap100 mode tap
+    ip addr add 10.0.0.1/24 dev tap100
+    ip link set dev tap100 up
+    modprobe dummy
+    ip link set name eth10 dev dummy0
+    ip addr add 10.0.0.4/16 dev eth10
+    ip link set eth10 up
+    ;;
+*)
+    exit 1
+    ;;
+esac
