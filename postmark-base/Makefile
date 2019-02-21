@@ -27,7 +27,7 @@ Dockerfile \
 Makefile \
 
 .PHONY: rumprun-packages-postmark
-rumprun-packages-postmark: rumprun solo5 FORCE
+rumprun-packages-postmark: rumprun FORCE
 	install -m 664 -D $(RUMPPKGS)/config.mk.dist $(RUMPPKGS)/config.mk
 	source $(RUMPRUN)/obj/config-PATH.sh && make -C $(RUMPPKGS)/postmark all bin/postmark.spt
 	install -m 775 -D $(RUMPPKGS)/postmark/bin/postmark.spt postmark.nabla
@@ -42,4 +42,4 @@ build_docker: submodule_warning $(FILES) rumprun-packages-postmark
 clean:
 	rm -rf postmark.nabla
 
-distclean: clean rumprun-packages-postmark-clean solo5-clean rumprun-clean
+distclean: clean rumprun-packages-postmark-clean rumprun-clean
