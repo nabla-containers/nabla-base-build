@@ -43,12 +43,5 @@ rumprun: FORCE submodule_warning
 rumprun-clean:
 	make -C $(TOP)/rumprun clean
 
-.PHONY: solo5
-solo5: FORCE submodule_warning
-	make -C $(TOP)/solo5
-
-solo5-clean:
-	make -C $(TOP)/solo5 clean
-
 .PHONY: FORCE
 
