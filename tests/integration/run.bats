@@ -37,14 +37,14 @@ function nabla_run() {
 }
 
 @test "test raw node version" {
-	nabla_run ${TOPLEVEL}/node-base/node.nabla -- '{"cmdline":"node --version"}'
+	nabla_run --x-exec-heap ${TOPLEVEL}/node-base/node.nabla -- '{"cmdline":"node --version"}'
 	[[ "$output" == *"v4.3.0"* ]]
 	[ "$status" -eq 0 ]
 }
 
 
 @test "test raw node (hello)" {
-	nabla_run ${TOPLEVEL}/node-base/node.nabla
+	nabla_run --x-exec-heap ${TOPLEVEL}/node-base/node.nabla
 	# node with no args prints "Hello, Rump!!"
 	[[ "$output" == *"Hello, Rump!!"* ]]
 	[ "$status" -eq 0 ]
