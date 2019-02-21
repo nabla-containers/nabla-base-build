@@ -37,7 +37,8 @@ Makefile \
 .PHONY: rumprun-packages-python3
 rumprun-packages-python3: rumprun FORCE
 	install -m 664 -D $(RUMPPKGS)/config.mk.dist $(RUMPPKGS)/config.mk
-	source $(RUMPRUN)/obj/config-PATH.sh && source $(RUMPRUN)/obj/config && make -C $(RUMPPKGS)/python3 bin/python.spt
+	source $(RUMPRUN)/obj/config && source $(RUMPRUN)/obj/config-PATH.sh && \
+		make -C $(RUMPPKGS)/python3 bin/python.spt
 	install -m 775 -D $(RUMPPKGS)/python3/bin/python.spt python3.nabla
 
 rumprun-packages-python3-clean:

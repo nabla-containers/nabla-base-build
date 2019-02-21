@@ -40,7 +40,8 @@ gobootstrap: FORCE
 
 .PHONY: gorump
 gorump: gobootstrap rumprun FORCE
-	source $(RUMPRUN)/obj/config-PATH.sh && cd $(GORUMP)/go/src && CGO_ENABLED=0 GOROOT_BOOTSTRAP=$(GOBOOTSTRAP) GOOS=rumprun GOARCH=amd64 ./make.bash && cd $(GOBASE)
+	source $(RUMPRUN)/obj/config && source $(RUMPRUN)/obj/config-PATH.sh && \
+		cd $(GORUMP)/go/src && CGO_ENABLED=0 GOROOT_BOOTSTRAP=$(GOBOOTSTRAP) GOOS=rumprun GOARCH=amd64 ./make.bash && cd $(GOBASE)
 	cp -r $(GORUMP)/go1.5 gorump
 	cp $(GORUMP)/go1.5/bin/go go
 	cp -r $(RUMPRUN) rumprun-solo5

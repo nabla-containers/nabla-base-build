@@ -30,7 +30,8 @@ Makefile \
 .PHONY: rumprun-packages-redis
 rumprun-packages-redis: rumprun FORCE
 	install -m 664 -D $(RUMPPKGS)/config.mk.dist $(RUMPPKGS)/config.mk
-	source $(RUMPRUN)/obj/config-PATH.sh && source $(RUMPRUN)/obj/config && make -C $(RUMPPKGS)/redis bin/redis-server.spt
+	source $(RUMPRUN)/obj/config && source $(RUMPRUN)/obj/config-PATH.sh && \
+		make -C $(RUMPPKGS)/redis bin/redis-server.spt
 	install -m 775 -D $(RUMPPKGS)/redis/bin/redis-server.spt redis.nabla
 
 rumprun-packages-redis-clean:

@@ -30,8 +30,7 @@ include $(RUMPPKGS)/nodejs/Makefile.inc
 .PHONY: rumprun-packages-nodejs
 rumprun-packages-nodejs: rumprun FORCE
 	install -m 664 -D $(RUMPPKGS)/config.mk.dist $(RUMPPKGS)/config.mk
-	source $(RUMPRUN)/obj/config-PATH.sh && \
-		source $(RUMPRUN)/obj/config && \
+	source $(RUMPRUN)/obj/config && source $(RUMPRUN)/obj/config-PATH.sh && \
 		make -C $(RUMPPKGS)/nodejs all $(BUILD_DIR)/node.spt
 	install -m 775 -D $(RUMPPKGS)/nodejs/$(BUILD_DIR)/node.spt node.nabla
 

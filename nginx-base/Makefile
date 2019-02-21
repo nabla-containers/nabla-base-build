@@ -36,7 +36,8 @@ Makefile \
 .PHONY: rumprun-packages-nginx
 rumprun-packages-nginx: rumprun FORCE
 	install -m 664 -D $(RUMPPKGS)/config.mk.dist $(RUMPPKGS)/config.mk
-	source $(RUMPRUN)/obj/config && make -C $(RUMPPKGS)/nginx bin/nginx.spt
+	source $(RUMPRUN)/obj/config && source $(RUMPRUN)/obj/config-PATH.sh && \
+			make -C $(RUMPPKGS)/nginx all bin/nginx.spt
 	install -m 775 -D $(RUMPPKGS)/nginx/bin/nginx.spt nginx.nabla
 
 rumprun-packages-nginx-clean:
