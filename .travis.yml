@@ -5,19 +5,31 @@
 #
 # Based on the opencontainers/runc .travis.yml file.
 
-language: c
-
+dist: xenial
 sudo: required
-services:
-  - docker
+language: c
+cache: ccache
 
-before_install:
-  - echo "deb http://archive.ubuntu.com/ubuntu trusty-backports main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
-  - sudo apt-get -qq update
-  - sudo apt-get install -y make gcc g++ libseccomp-dev/trusty-backports genisoimage
-  - env | grep TRAVIS_
+compiler:
+  - gcc
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - gcc-6
+      - g++-6
+
+before_script:
+  - sudo apt-get update -y
+  - sudo apt-get install qemu-kvm libxen-dev libseccomp-dev bats genisoimage sudo iproute2 wget -y
+  - sudo apt-get install --only-upgrade binutils gcc -y
+  - export CC=gcc-6
+  - export CXX=g++-6
+  - git submodule update --init --recursive
+  - bash travis_wait.sh 60 make -j16 --quiet world
 
 script:
-  - git submodule update --init --recursive
-  - bash travis_wait.sh 60 make -j2 --quiet world
+  - export CC=gcc-6
+  - export CXX=g++-6
   - make integration
