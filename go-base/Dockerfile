@@ -1,12 +1,10 @@
 FROM ubuntu:16.04
 
-RUN apt-get update 
-RUN apt-get install -y build-essential git
-
 # rumprun can only be built with gcc-6
 # XXX: Not only that, this version has to match whatever
 # gcc was used to build rumprun in the host.
 RUN apt-get update && \
+	build-essential git -y && \
 	apt-get install build-essential software-properties-common -y && \
 	add-apt-repository ppa:ubuntu-toolchain-r/test -y && \
 	apt-get update && \
@@ -24,14 +22,14 @@ RUN mkdir /goapp
 # needs to be at exactly the same place where it was built.
 # (unless I'm missing something).
 ARG host_rumproot
-ADD rumprun-solo5 ${host_rumproot}
-ADD gorump /gorump
+COPY rumprun-solo5 ${host_rumproot}
+COPY gorump /gorump
 
 COPY gomaincaller.go /goapp
 COPY _gorump_main.c /goapp
 COPY Makefile.goapp /goapp
 
-ENV PATH=${host_rumproot}"/rumprun-solo5/bin:${PATH}"
+ENV PATH="${host_rumproot}/rumprun-solo5/bin:${PATH}"
 ENV CC="x86_64-rumprun-netbsd-gcc" 
 ENV GOROOT="/gorump"
 ENV GOPATH="/gopath"
