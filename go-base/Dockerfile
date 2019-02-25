@@ -4,8 +4,7 @@ FROM ubuntu:16.04
 # XXX: Not only that, this version has to match whatever
 # gcc was used to build rumprun in the host.
 RUN apt-get update && \
-	build-essential git -y && \
-	apt-get install build-essential software-properties-common -y && \
+	apt-get install git build-essential software-properties-common -y && \
 	add-apt-repository ppa:ubuntu-toolchain-r/test -y && \
 	apt-get update && \
 	apt-get install gcc-snapshot -y && \
