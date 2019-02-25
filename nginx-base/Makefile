@@ -34,10 +34,11 @@ Dockerfile \
 Makefile \
 
 .PHONY: rumprun-packages-nginx
-rumprun-packages-nginx: rumprun solo5 FORCE
+rumprun-packages-nginx: rumprun FORCE
 	install -m 664 -D $(RUMPPKGS)/config.mk.dist $(RUMPPKGS)/config.mk
-	source $(RUMPRUN)/obj/config-PATH.sh && make -C $(RUMPPKGS)/nginx all bin/nginx.seccomp
-	install -m 775 -D $(RUMPPKGS)/nginx/bin/nginx.seccomp nginx.nabla
+	source $(RUMPRUN)/obj/config && source $(RUMPRUN)/obj/config-PATH.sh && \
+			make -C $(RUMPPKGS)/nginx all bin/nginx.spt
+	install -m 775 -D $(RUMPPKGS)/nginx/bin/nginx.spt nginx.nabla
 
 rumprun-packages-nginx-clean:
 	make -C $(RUMPPKGS)/nginx clean
@@ -49,4 +50,4 @@ build_docker: submodule_warning $(FILES) rumprun-packages-nginx
 clean:
 	rm -rf nginx.nabla
 
-distclean: clean rumprun-packages-nginx-clean solo5-clean rumprun-clean
+distclean: clean rumprun-packages-nginx-clean rumprun-clean

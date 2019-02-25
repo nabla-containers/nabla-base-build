@@ -6,10 +6,6 @@
 	path = rumprun-packages
 	url = https://github.com/nabla-containers/rumprun-packages
 	branch = solo5
-[submodule "solo5"]
-	path = solo5
-	url = https://github.com/nabla-containers/solo5
-	branch = ukvm-linux-seccomp
 [submodule "gorump"]
 	path = gorump
 	url = https://github.com/nabla-containers/gorump

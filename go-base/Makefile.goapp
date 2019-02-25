@@ -1,4 +1,4 @@
-seccomp: goapp.seccomp
+spt: goapp.spt
 
 goapp.a: $(wildcard *.go)
 	go build -buildmode=c-archive -v -a -x 
@@ -6,11 +6,11 @@ goapp.a: $(wildcard *.go)
 goapp.pseudo: goapp.a
 	RUMPRUN_STUBLINK=succeed x86_64-rumprun-netbsd-gcc -g -o goapp.pseudo _gorump_main.c goapp.a
 
-goapp.seccomp: goapp.pseudo
-	rumprun-bake solo5_ukvm_seccomp goapp.seccomp goapp.pseudo
+goapp.spt: goapp.pseudo
+	rumprun-bake solo5_spt goapp.spt goapp.pseudo
 
 %.bin: %.pseudo
 	rumprun-bake hw_virtio $@ $<
 
 clean:
-	rm -f goapp.a goapp.h goapp.seccomp goapp.pseudo _gorump_main.c gomaincaller.go 
+	rm -f goapp.a goapp.h goapp.spt goapp.pseudo _gorump_main.c gomaincaller.go

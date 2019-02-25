@@ -28,10 +28,11 @@ Dockerfile \
 Makefile \
 
 .PHONY: rumprun-packages-redis
-rumprun-packages-redis: rumprun solo5 FORCE
+rumprun-packages-redis: rumprun FORCE
 	install -m 664 -D $(RUMPPKGS)/config.mk.dist $(RUMPPKGS)/config.mk
-	source $(RUMPRUN)/obj/config-PATH.sh && make -C $(RUMPPKGS)/redis all bin/redis-server.seccomp
-	install -m 775 -D $(RUMPPKGS)/redis/bin/redis-server.seccomp redis.nabla
+	source $(RUMPRUN)/obj/config && source $(RUMPRUN)/obj/config-PATH.sh && \
+		make -C $(RUMPPKGS)/redis bin/redis-server.spt
+	install -m 775 -D $(RUMPPKGS)/redis/bin/redis-server.spt redis.nabla
 
 rumprun-packages-redis-clean:
 	make -C $(RUMPPKGS)/redis clean
@@ -43,4 +44,4 @@ build_docker: submodule_warning $(FILES) rumprun-packages-redis
 clean:
 	rm -rf redis.nabla
 
-distclean: clean rumprun-packages-redis-clean solo5-clean rumprun-clean
+distclean: clean rumprun-packages-redis-clean rumprun-clean

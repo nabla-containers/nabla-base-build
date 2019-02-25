@@ -36,24 +36,16 @@ submodule_warning:
 
 endif
 
-libsolo5 = $(TOP)/rumprun/rumprun-solo5/rumprun-x86_64/lib/rumprun-solo5/libsolo5_seccomp.a
-
 .PHONY: rumprun
-rumprun: FORCE submodule_warning $(libsolo5)
-	make -C $(TOP)/rumprun build
+rumprun: rumprun_stamp
 
-$(libsolo5): FORCE solo5
-	install -m 664 -D $(TOP)/solo5/kernel/ukvm/solo5.o $@
+rumprun_stamp: submodule_warning
+	make -C $(TOP)/rumprun build
+	touch $@
 
 rumprun-clean:
 	make -C $(TOP)/rumprun clean
-
-.PHONY: solo5
-solo5: FORCE submodule_warning
-	make -C $(TOP)/solo5
-
-solo5-clean:
-	make -C $(TOP)/solo5 clean
+	rm rumprun_stamp
 
 .PHONY: FORCE
 
